@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZerinSun</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+</head>
+<body>
+
+  <canvas id="stars-canvas"></canvas>
+
+  <main class="main-container">
+
+    <!-- 🔆 نمایش امتیاز و لیگ -->
+    <section class="top-panel">
+      <div class="sun-score">
+        <span id="sun-count">0.00</span> <span class="unit">SUN</span>
+      </div>
+      <div class="league-info">
+        <span id="league-label" onclick="location.href='cups.html'" style="cursor: pointer;">
+          League
+        </span>
+      </div>
+    </section>
+
+    <!-- 🌞 سکه مرکزی -->
+    <section class="coin-panel">
+      <div class="coin-wrapper">
+        <img id="sun-coin" src="sun-icon.png" alt="Sun Coin" />
+      </div>
+    </section>
+
+    <!-- ⚡ نوار انرژی -->
+    <div class="energy-bar-container">
+      <div id="energy-bar-fill"></div>
+    </div>
+
+    <!-- 📱 ناوبری پایین -->
+    <nav class="bottom-nav">
+      <button class="nav-btn" onclick="location.href='referral.html'">
+        <img src="referral-icon.png" />
+        <span>Referral</span>
+      </button>
+      <button class="nav-btn" onclick="location.href='channels.html'">
+        <img src="channels-icon.png" />
+        <span>Channels</span>
+      </button>
+      <button class="nav-btn" onclick="location.href='wallet.html'">
+        <img src="wallet-icon.png" />
+        <span>Wallet</span>
+      </button>
+      <button class="nav-btn" onclick="location.href='daily.html'">
+        <img src="daily-icon.png" />
+        <span>Daily</span>
+      </button>
+    </nav>
+
+  </main>
+
+  <!-- 📜 اسکریپت‌ها -->
+  <script src="core.js"></script>
+  <script src="stars.js"></script>
+
+  <script>
+    function updateEnergyBar() {
+      const fill = document.getElementById("energy-bar-fill");
+      if (fill && window.ZerinCore) {
+        const energy = ZerinCore.getEnergy();
+        const max = ZerinCore.MAX_ENERGY;
+        const percent = (energy / max) * 100;
+        fill.style.width = percent + "%";
+      }
+    }
+
+    function refreshMainUI() {
+      if (window.ZerinCore) {
+        ZerinCore.loadData();
+        ZerinCore.updateUI();
+
+        // 🎖️ آپدیت نام لیگ
+        const leagueEl = document.getElementById("league-label");
+        if (leagueEl) {
+          leagueEl.textContent = ZerinCore.getCupLevel() + " League";
+        }
+
+        // ⚡ آپدیت نوار انرژی و عدد SUN
+        updateEnergyBar();
+        const sunCount = ZerinCore.getSun().toFixed(2);
+        document.getElementById("sun-count").textContent = sunCount;
+      }
+    }
+
+    window.addEventListener("load", refreshMainUI);
+    window.addEventListener("focus", refreshMainUI);
+
+    // 🌞 کلیک روی خورشید
+    document.addEventListener("DOMContentLoaded", () => {
+      const sunCoin = document.getElementById("sun-coin");
+      const sunCountEl = document.getElementById("sun-count");
+
+      if (sunCoin && sunCountEl && window.ZerinCore) {
+        sunCoin.addEventListener("click", () => {
+          if (ZerinCore.useEnergy(0.01)) {
+            ZerinCore.addSun(0.01);
+            ZerinCore.addTap();
+            sunCountEl.textContent = ZerinCore.getSun().toFixed(2);
+            updateEnergyBar();
+          }
+        });
+      }
+    });
+
+    // ✅ ثبت رفرال
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref && !localStorage.getItem("ref-counted")) {
+      if (window.ZerinCore && typeof ZerinCore.sendReferral === "function") {
+        ZerinCore.sendReferral(ref);
+        localStorage.setItem("ref-counted", "true");
+        console.log("✅ Referral registered for:", ref);
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cups - ZerinSun</title>
+  <style>
+    body {
+      background: #000;
+      color: white;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      color: #ffd700;
+      margin-bottom: 30px;
+      text-shadow: 0 0 8px #ffdd55;
+    }
+
+    .cup-row {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 28px;
+      padding: 10px 10px 40px;
+      justify-content: start;
+      scroll-snap-type: x mandatory;
+    }
+
+    .cup-item {
+      flex: 0 0 auto;
+      width: 120px;
+      text-align: center;
+      scroll-snap-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cup-item img {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: radial-gradient(circle, #111 30%, #000);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    .cup-label {
+      margin-top: 10px;
+      font-size: 0.95em;
+      color: #ffe066;
+      font-weight: bold;
+      text-shadow: 0 0 4px #ffaa0077;
+    }
+
+    .cup-stage {
+      font-size: 0.75em;
+      color: #bbb;
+      margin-top: 2px;
+    }
+
+    .cup-reward {
+      font-size: 0.75em;
+      color: #88ffcc;
+      margin-top: 4px;
+    }
+
+    .active-cup {
+      transform: scale(1.12);
+      box-shadow: 0 0 18px #ffdd55aa, 0 0 10px #ffaa00aa;
+      border: 2px solid #ffd700;
+      border-radius: 8px;
+    }
+
+    .spacer {
+      flex-grow: 1;
+    }
+
+    .footer {
+      margin-bottom: 24px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 20px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      color: #ffd700;
+      font-weight: bold;
+      text-decoration: none;
+      border: 1px solid #ffaa00aa;
+      box-shadow: 0 0 6px #ffcc00aa;
+      transition: background 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏆 Your Cups</h1>
+
+  <div class="cup-row">
+    <div class="cup-item" data-name="Bronze">
+      <img src="images/cups/bronze-cup.png" alt="Bronze Cup" />
+      <div class="cup-label">Bronze</div>
+      <div class="cup-stage">50+</div>
+      <div class="cup-reward">Reward: +10</div>
+    </div>
+    <div class="cup-item" data-name="Silver">
+      <img src="images/cups/silver-cup.png" alt="Silver Cup" />
+      <div class="cup-label">Silver</div>
+      <div class="cup-stage">100+</div>
+      <div class="cup-reward">Reward: +20</div>
+    </div>
+    <div class="cup-item" data-name="Gold">
+      <img src="images/cups/gold-cup.png" alt="Gold Cup" />
+      <div class="cup-label">Gold</div>
+      <div class="cup-stage">180+</div>
+      <div class="cup-reward">Reward: +30</div>
+    </div>
+    <div class="cup-item" data-name="Emerald">
+      <img src="images/cups/emerald-cup.png" alt="Emerald Cup" />
+      <div class="cup-label">Emerald</div>
+      <div class="cup-stage">250+</div>
+      <div class="cup-reward">Reward: +40</div>
+    </div>
+    <div class="cup-item" data-name="Sapphire">
+      <img src="images/cups/sapphire-cup.png" alt="Sapphire Cup" />
+      <div class="cup-label">Sapphire</div>
+      <div class="cup-stage">340+</div>
+      <div class="cup-reward">Reward: +50</div>
+    </div>
+    <div class="cup-item" data-name="Ruby">
+      <img src="images/cups/ruby-cup.png" alt="Ruby Cup" />
+      <div class="cup-label">Ruby</div>
+      <div class="cup-stage">410+</div>
+      <div class="cup-reward">Reward: +60</div>
+    </div>
+    <div class="cup-item" data-name="Diamond">
+      <img src="images/cups/diamond-cup.png" alt="Diamond Cup" />
+      <div class="cup-label">Diamond</div>
+      <div class="cup-stage">500+</div>
+      <div class="cup-reward">Reward: +70</div>
+    </div>
+    <div class="cup-item" data-name="Legendary">
+      <img src="images/cups/legendary-cup.png" alt="Legendary Cup" />
+      <div class="cup-label">Legendary</div>
+      <div class="cup-stage">600+</div>
+      <div class="cup-reward">Reward: +80</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="footer">
+    <a href="index.html" class="back-btn">← Back to Home</a>
+  </div>
+
+  <script src="core.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sun = ZerinCore.getSun();
+
+      const cupOrder = [
+        { name: "Bronze", min: 50 },
+        { name: "Silver", min: 100 },
+        { name: "Gold", min: 180 },
+        { name: "Emerald", min: 250 },
+        { name: "Sapphire", min: 340 },
+        { name: "Ruby", min: 410 },
+        { name: "Diamond", min: 500 },
+        { name: "Legendary", min: 600 }
+      ];
+
+      let currentCup = null;
+      for (let cup of cupOrder) {
+        if (sun >= cup.min) currentCup = cup.name;
+      }
+
+      if (currentCup) {
+        const activeItem = document.querySelector(`.cup-item[data-name="${currentCup}"]`);
+        if (activeItem) activeItem.classList.add("active-cup");
+      }
+    });
+  </script>
+
+</body>
+</html>
