@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { Telegraf } = require("telegraf");
-const fetch = require("node-fetch"); // حواست باشه این پکیج نصبه
+const fetch = require("node-fetch");
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -8,7 +8,7 @@ bot.start(async (ctx) => {
   const userId = ctx.from.id;
   const referralLink = `https://t.me/ZerinSunBot?start=${userId}`;
 
-  // ⚡ بیدار کردن Render server
+  // Wake up server
   try {
     await fetch("https://bahry1.onrender.com/healthz");
     console.log("✅ Render server is awake!");
@@ -16,7 +16,7 @@ bot.start(async (ctx) => {
     console.error("⚠️ Failed to wake Render server:", err);
   }
 
-  // 🖼 ارسال پیام خوش‌آمد
+  // Welcome message with image
   await ctx.replyWithPhoto(
     { url: "https://i.ibb.co/cSS043xG/sun-icon.png" },
     {
@@ -36,7 +36,7 @@ This isn’t just an app — it’s a movement built by people like you.
     }
   );
 
-  // 🔘 دکمه‌ها
+  // Keyboard with Play and Invite
   await ctx.reply("👇 Select an option / یک گزینه انتخاب کن:", {
     reply_markup: {
       keyboard: [
@@ -50,14 +50,16 @@ This isn’t just an app — it’s a movement built by people like you.
         ],
         ["📨 Invite friends"]
       ],
-      resize_keyboard: true,
-      one_time_keyboard: false
+      resize_keyboard: true
     }
   });
 });
 
-// 📨 هندل کردن دکمه Invite friends
 bot.hears("📨 Invite friends", (ctx) => {
   const userId = ctx.from.id;
   const referralLink = `https://t.me/ZerinSunBot?start=${userId}`;
+  ctx.reply(`🔗 Your personal invite link:\n${referralLink}`);
+});
 
+bot.launch();
+console.log("🤖 ZerinSunBot is running...");
